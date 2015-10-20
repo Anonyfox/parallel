@@ -1,6 +1,6 @@
 # Parallel
 
-The "Hello World" of Elixir: a parallel map function. I expanded it a little for the most importent functions used in list processing that can be parallelized. Other than that, this module shall stay small and focussed.
+The "Hello World" of Elixir: a parallel map function. I expanded it a little for the most important functions used in list processing that can be parallelized. Other than that, this module shall stay small and focussed.
 
 In contrast to other similar solutions out there, I do *not* use a capped worker pool, every computation gets spawned at the same time.
 
@@ -37,4 +37,4 @@ Parallel.any? [1, 2, 3], fn(x) -> x == 2 end # => true
 
 ## LICENCE
 
-MIT. 
+MIT.

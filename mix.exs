@@ -2,12 +2,20 @@ defmodule Parallel.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :parallel,
-     version: "0.0.1",
-     elixir: "~> 1.0",
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     deps: deps]
+    [
+      app: :parallel,
+      description: "Straightforward parallel processing for Elixir",
+      version: "0.0.1",
+      elixir: "~> 1.0",
+      build_embedded: Mix.env == :prod,
+      start_permanent: Mix.env == :prod,
+      deps: deps,
+      package: [
+        maintainers: ["Maximilian Stroh"],
+        licences: ["MIT"],
+        links: %{ "GitHub" => "https://github.com/Anonyfox/parallel" }
+      ]
+    ]
   end
 
   # Configuration for the OTP application
@@ -29,4 +37,5 @@ defmodule Parallel.Mixfile do
   defp deps do
     []
   end
+
 end
