@@ -20,8 +20,8 @@ defmodule Parallel do
 
   def map(list, fun) do
     list
-    |> Stream.map(fn(item) -> dispatch(fun).(item) end)
-    |> Enum.map(fn(pid) -> collect.(pid) end)
+    |> Stream.map(&Task.async(fn -> fun.(&1) end))
+    |> Enum.map(&Task.await(&1))
   end
 
   @doc """
@@ -43,8 +43,8 @@ defmodule Parallel do
 
   def filter(list, fun) do
     list
-    |> Stream.map(fn(item) -> {dispatch(fun).(item), item} end)
-    |> Stream.map(fn({pid, item}) -> {collect.(pid), item} end)
+    |> Stream.map(fn(item) -> {Task.async(fn -> fun.(item) end), item} end)
+    |> Stream.map(fn({pid, item}) -> {Task.await(pid), item} end)
     |> Stream.filter(fn({bool, _item}) -> bool == true end)
     |> Enum.map(fn({_bool, item}) -> item end)
   end
@@ -58,34 +58,13 @@ defmodule Parallel do
 
   def reject(list, fun) do
     list
-    |> Stream.map(fn(item) -> {dispatch(fun).(item), item} end)
-    |> Stream.map(fn({pid, item}) -> {collect.(pid), item} end)
+    |> Stream.map(fn(item) -> {Task.async(fn -> fun.(item) end), item} end)
+    |> Stream.map(fn({pid, item}) -> {Task.await(pid), item} end)
     |> Stream.filter(fn({bool, _item}) -> bool == false end)
     |> Enum.map(fn({_bool, item}) -> item end)
   end
 
   def all?(list, fun), do: length(filter(list,fun)) == length(list)
   def any?(list, fun), do: length(filter(list,fun)) > 0
-
-  # -------------------------------------------------------------
-
-  # helper function to spawn a new process for a single list item
-  defp dispatch(fun) do
-    caller = self
-    fn(item) ->
-      spawn fn ->
-        send(caller, fun.(item))
-      end
-    end
-  end
-
-  # helper function to receive the calculation result for a single list item
-  defp collect do
-    fn(_) ->
-      receive do
-        result -> result
-      end
-    end
-  end
 
 end
