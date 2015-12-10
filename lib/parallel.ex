@@ -21,7 +21,7 @@ defmodule Parallel do
   def map(list, fun) do
     list
     |> Stream.map(&Task.async(fn -> fun.(&1) end))
-    |> Enum.map(&Task.await(&1))
+    |> Enum.map(&Task.await(&1, 3600000))
   end
 
   @doc """
