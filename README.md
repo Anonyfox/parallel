@@ -12,7 +12,7 @@ Add Parallel to your Mixfile
 # mix.exs
 def deps do
   [
-    {:parallel "~> 0.0"}
+    {:parallel, "~> 0.0"}
   ]
 end
 ````
